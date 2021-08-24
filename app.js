@@ -3,13 +3,18 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const cors = require('cors');
+const middUsuarios = require('./middlewares/midd.usuarios');
 
 const sequelize = require('./db/db.conexion');
 const CredencialUsuarios = require('./db/db.modelo.credencialUsuarios');
 const CredencialEmpresas = require('./db/db.modelo.credencialEmpresas');
-const Educacion = require('./db/db.modelo.educacion');
+const GradosAcademicos = require('./db/db.modelo.gradosAcademicos');
+const Paises = require('./db/db.modelo.paises');
+const Estados = require('./db/db.modelo.estados');
+const Municipios = require('./db/db.modelo.municipios');
 const Usuarios = require('./db/db.modelo.usuarios');
 const Empresas = require('./db/db.modelo.empresas');
+const Educacion = require('./db/db.modelo.educacionUsuarios');
 const CertificacionesDeUsuarios = require('./db/db.modelo.certificacionesUsuarios');
 const Idiomas = require('./db/db.modelo.idiomas');
 const DominioIdiomas = require('./db/db.modelo.dominioIdiomas');
@@ -30,10 +35,14 @@ const EntornosDeUsuarios = require('./db/db.modelo.entornosUsuarios');
 const Relaciones = require('./db/db.modelo.relacionUsuarios');
 const Contactos = require('./db/db.modelo.contactos');
 const Comentarios = require('./db/db.modelo.comentarios');
+const dbServicios = require('./db/db.servicios');
+
+const vistaUsuarios = require('./app/vista/vista.usuarios');
 
 // Middlewares globales
 app.use(express.json());
 app.use(cors());
+app.use(middUsuarios.limiteConsultas);
 
 // Configuraciones globales
 app.use(express.static(__dirname + '/public'));
@@ -45,9 +54,13 @@ const iniciarServidor = async () =>{
     try {
         await CredencialUsuarios.sync();
         await CredencialEmpresas.sync();
-        await Educacion.sync();
+        await GradosAcademicos.sync();
+        await Paises.sync();
+        await Estados.sync();
+        await Municipios.sync();
         await Usuarios.sync();
         await Empresas.sync();
+        await Educacion.sync();
         await CertificacionesDeUsuarios.sync();
         await Idiomas.sync();
         await DominioIdiomas.sync();
@@ -68,6 +81,7 @@ const iniciarServidor = async () =>{
         await Relaciones.sync();
         await Contactos.sync();
         await Comentarios.sync();
+        await dbServicios.registrarValoresIniciales();
         await sequelize.authenticate();
         console.log('Se establecio una conexión exitosa con la DB');
         app.listen(process.env.PORT, ()=>{
@@ -81,3 +95,4 @@ const iniciarServidor = async () =>{
 iniciarServidor();
 
 // Inicializar las rutas del servidor
+vistaUsuarios(app);

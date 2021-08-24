@@ -3,15 +3,15 @@ const {DataTypes, Model} = require('sequelize');
 const sequelize = require('./db.conexion');
 
 // Definir el modelo de la tabla para la DB
-const Educacion = sequelize.define('grados_academicos',{
-    id_grado:{
+const Paises = sequelize.define('paises',{
+    id_pais:{
         primaryKey: true,
         autoIncrement: true,
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    grado_academico:{
-        type: DataTypes.STRING(25),
+    pais:{
+        type: DataTypes.STRING(20),
         allowNull: false
     }
 }, {
@@ -20,5 +20,5 @@ const Educacion = sequelize.define('grados_academicos',{
     updatedAt: 'fecha_actualizacion'
 });
 
-// Exportar el modelo
-module.exports = Educacion;
+// Exportar modelo
+module.exports = Paises;

@@ -2,7 +2,9 @@
 const {DataTypes, Model} = require('sequelize');
 const sequelize = require('./db.conexion');
 const CredencialUsuarios = require('./db.modelo.credencialUsuarios');
-const Educacion = require('./db.modelo.educacion');
+const Paises = require('./db.modelo.paises');
+const Estados = require('./db.modelo.estados');
+const Municipios = require('./db.modelo.municipios');
 
 // Definir el modelo de la tabla para la DB
 const Usuarios = sequelize.define('usuarios',{
@@ -32,25 +34,25 @@ const Usuarios = sequelize.define('usuarios',{
         type: DataTypes.STRING(150),
         allowNull: true
     },
-    usuario_pais: {
-        type: DataTypes.STRING(20),
-        allowNull: false
+    id_pais: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
-    usuario_estado: {
-        type: DataTypes.STRING(20),
-        allowNull: false
+    id_estado: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
-    usuario_municipio:{
-        type: DataTypes.STRING(40),
-        allowNull: false
+    id_municipio:{
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     usuario_edad:{
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    id_grado:{
-        type: DataTypes.INTEGER,
-        allowNull: false
+    usuario_telefono:{
+        type: DataTypes.STRING(15),
+        allowNull: true
     },
     usuario_linkedin:{
         type: DataTypes.STRING(100),
@@ -72,8 +74,14 @@ const Usuarios = sequelize.define('usuarios',{
 Usuarios.belongsTo(CredencialUsuarios,{foreignKey: 'id_credencial'});
 CredencialUsuarios.hasMany(Usuarios,{foreignKey: 'id_credencial'});
 
-Usuarios.belongsTo(Educacion, {foreignKey: 'id_grado'});
-Educacion.hasMany(Usuarios, {foreignKey: 'id_grado'});
+Usuarios.belongsTo(Paises, {foreignKey: 'id_pais'});
+Paises.hasMany(Usuarios, {foreignKey: 'id_pais'});
+
+Usuarios.belongsTo(Estados, {foreignKey: 'id_estado'});
+Estados.hasMany(Usuarios, {foreignKey: 'id_estado'});
+
+Usuarios.belongsTo(Municipios, {foreignKey: 'id_municipio'});
+Municipios.hasMany(Usuarios, {foreignKey: 'id_municipio'});
 
 // Exportar el modelo
 module.exports = Usuarios;
