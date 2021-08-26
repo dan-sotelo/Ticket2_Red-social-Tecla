@@ -32,7 +32,8 @@ let generarToken = async(infoUsuario) =>{
     let usuario = {
         id_usuario: infoUsuario.id_usuario,
         correo: infoUsuario.usuario_correo,
-        credencial: infoUsuario.id_credencial
+        credencial: infoUsuario.id_credencial,
+        activo: infoUsuario.usuario_activo
     };
     try{
         const token = jwt.sign({usuario}, process.env.SECRET_KEY, {expiresIn: '1h'});  //Token con validación de 1 hora
@@ -57,7 +58,7 @@ let verificarToken = async(token) =>{
     }
 }
 
-let actualizarPerfilUsuario = async(idUsuario, datos) =>{
+let actualizarContactoUsuario = async(idUsuario, datos) =>{
     try{
         if (datos.pais != undefined){await modeloUsuarios.registrarPais(idUsuario, datos.pais)};
         if (datos.estado != undefined){await modeloUsuarios.registrarEstado(idUsuario, datos.estado)};
@@ -66,10 +67,43 @@ let actualizarPerfilUsuario = async(idUsuario, datos) =>{
         if (datos.linkedin != undefined){await modeloUsuarios.registrarLinkedin(idUsuario, datos.linkedin)};
         if (datos.github != undefined){await modeloUsuarios.registrarGithub(idUsuario, datos.github)};
     } catch(error) {
-        console.log(`Error en el controlador al verificar el token: ${error}`);
+        console.log(`Error en el controlador al actualizar la información de contacto: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let registrarImagen = async(idUsuario, imagen) =>{
+    try{
+        if(imagen != undefined){
+            await modeloUsuarios.registrarImagen(idUsuario, imagen)
+        } else { 
+            throw new Error('No se registro ninguna imagen')
+        }
+    } catch(error) {
+        console.log(`Error en el controlador al actualizar la imagen de usuario: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let cambiarPassword = async(usuario) =>{
+    try{
+        let encriptacion = await bcrypt.genSalt(10);
+        usuario.passwordNueva = await bcrypt.hash(usuario.passwordNueva, encriptacion);
+        await modeloUsuarios.cambiarPassword(usuario);
+    } catch(error){
+        console.log(`Error en el controlador al cambiar la password: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let desactivarCuenta = async(idUsuario, password) =>{
+    try{
+        await modeloUsuarios.desactivarCuenta(idUsuario, password);
+    } catch(error){
+        console.log(`Error en el controlador al desactivar la cuenta: ${error}`);
         throw new Error(error.message);
     }
 }
 
 // Exportar los modulos
-module.exports = {registrarUsuario, buscarUsuario, generarToken, verificarToken, actualizarPerfilUsuario};
+module.exports = {registrarUsuario, buscarUsuario, generarToken, verificarToken, actualizarContactoUsuario, registrarImagen, cambiarPassword, desactivarCuenta};

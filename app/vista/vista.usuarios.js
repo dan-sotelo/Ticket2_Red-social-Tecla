@@ -35,11 +35,54 @@ module.exports = async(app) =>{
         let datos = req.body;
         try{
             if (Object.keys(datos).length > 0){
-                let datosUsuario = await controladorUsuarios.actualizarPerfilUsuario(usuario.id_usuario, datos);
+                await controladorUsuarios.actualizarContactoUsuario(usuario.id_usuario, datos);
                 res.status(200).json({message: 'Actualización de perfil exitoso'});
             } else {
                 res.status(400).json({message: 'No se recibio ningun valor'});
             }
+        } catch(error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    });
+
+    // Endpoint para registrar o actualizar la imagen de perfil del usuario
+    app.patch('/teclers/perfil/imagen', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+        let usuario = req.params.usuario;
+        let datos = req.body;
+        try{
+            await controladorUsuarios.registrarImagen(usuario.id_usuario, datos.imagen);
+            res.status(200).json({message: 'Actualización exitosa de la foto de perfil'});
+        } catch(error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    });
+
+    // Endpoint para cambiar la password
+    app.patch('/teclers/perfil/cambiar_password', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosCambiarPassword, async(req, res) =>{
+        let usuario = req.params.usuario;
+        let datosUsuario = req.body;
+        try{
+            if(datosUsuario.correo == usuario.correo){
+                await controladorUsuarios.cambiarPassword(datosUsuario);
+                res.status(200).json({message: 'Actualización exitosa de password'});
+            } else {
+                throw new Error ('Usuario invalido');
+            }
+        } catch(error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    });
+
+    // Endpoint para desactivar la cuenta
+    app.patch('/teclers/perfil/desactivacion', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosPassword, async(req, res) =>{
+        let usuario = req.params.usuario;
+        let datosUsuario = req.body;
+        try{
+            await controladorUsuarios.desactivarCuenta(usuario.id_usuario, datosUsuario.password);
+            res.status(200).json({message: 'La cuenta se desactivo satisfactoriamente'});
         } catch(error) {
             console.log(error.message);
             res.status(500).json({message: error.message});

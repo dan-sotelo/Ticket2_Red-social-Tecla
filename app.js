@@ -38,6 +38,9 @@ const Comentarios = require('./db/db.modelo.comentarios');
 const dbServicios = require('./db/db.servicios');
 
 const vistaUsuarios = require('./app/vista/vista.usuarios');
+const vistaEducacion = require('./app/vista/vista.educacion');
+const vistaIdiomas = require('./app/vista/vista.idiomas');
+const vistaHobbies = require('./app/vista/vista.hobbies');
 
 // Middlewares globales
 app.use(express.json());
@@ -96,3 +99,6 @@ iniciarServidor();
 
 // Inicializar las rutas del servidor
 vistaUsuarios(app);
+vistaEducacion(app);
+vistaIdiomas(app);
+vistaHobbies(app);

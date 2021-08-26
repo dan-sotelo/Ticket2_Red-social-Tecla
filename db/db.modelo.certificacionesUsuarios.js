@@ -18,6 +18,22 @@ const CertificacionesDeUsuarios = sequelize.define('certificaciones_de_usuarios'
     id_usuario:{
         type: DataTypes.INTEGER,
         allowNull: false
+    },
+    institucion:{
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    expedicion:{
+        type: DataTypes.STRING(15),
+        allowNull: false
+    },
+    expiracion: {
+        type: DataTypes.STRING(15),
+        allowNull: true
+    },
+    folio: {
+        type: DataTypes.STRING(50),
+        allowNull: true
     }
 }, {
     timestamps: true,

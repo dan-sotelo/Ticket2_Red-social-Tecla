@@ -34,6 +34,9 @@ let buscarUsuario = async(usuario) =>{
         if(infoUsuario != null){
             let validacionPass = await bcrypt.compare(usuario.password, infoUsuario.usuario_password);
             if(validacionPass){
+                if(infoUsuario.usuario_activo == false){
+                    Usuarios.update({usuario_activo: true}, {where: {usuario_correo: `${usuario.correo}`}})
+                }
                 return infoUsuario;
             } else {
                 console.log('La contraseña es incorrecta');
@@ -104,7 +107,7 @@ let registrarTelefono = async(idUsuario, telefono) =>{
     try{
         await Usuarios.update({usuario_telefono: `${telefono}`}, {where: {id_usuario: `${idUsuario}`}});
     } catch(error) {
-        console.log(`Error en el modelo al registrar el municipio: ${error}`)
+        console.log(`Error en el modelo al registrar el telefono: ${error}`)
         throw new Error(error.message);
     }
 }
@@ -113,7 +116,7 @@ let registrarLinkedin = async(idUsuario, linkedin) =>{
     try{
         await Usuarios.update({usuario_linkedin: `${linkedin}`}, {where: {id_usuario: `${idUsuario}`}});
     } catch(error) {
-        console.log(`Error en el modelo al registrar el municipio: ${error}`)
+        console.log(`Error en el modelo al registrar linkedin: ${error}`)
         throw new Error(error.message);
     }
 }
@@ -122,10 +125,61 @@ let registrarGithub = async(idUsuario, github) =>{
     try{
         await Usuarios.update({usuario_github: `${github}`}, {where: {id_usuario: `${idUsuario}`}});
     } catch(error) {
-        console.log(`Error en el modelo al registrar el municipio: ${error}`)
+        console.log(`Error en el modelo al registrar github: ${error}`)
+        throw new Error(error.message);
+    }
+}
+
+let registrarImagen = async(idUsuario, imagen) =>{
+    try{
+        await Usuarios.update({usuario_imagen: `${imagen}`}, {where: {id_usuario: `${idUsuario}`}});
+    } catch(error) {
+        console.log(`Error en el modelo al registrar la imagen: ${error}`)
+        throw new Error(error.message);
+    }
+}
+
+let cambiarPassword = async(usuario) =>{
+    try{
+        let usuarioRegistrado = await Usuarios.findOne({where: {usuario_correo: `${usuario.correo}`}});
+        if(usuarioRegistrado != null){
+            let validarPasswordActual = await bcrypt.compare(usuario.passwordActual, usuarioRegistrado.usuario_password);
+            if(validarPasswordActual){
+                await Usuarios.update({usuario_password: `${usuario.passwordNueva}`}, {where: {usuario_correo: `${usuario.correo}`}});
+            } else {
+                console.log('Contraseña invalida');
+                throw new Error('Contraseña invalida, por favor introduzca su contraseña actual');
+            }
+        } else {
+            console.log('Usuario no registrado');
+            throw new Error('Correo invalido, revise su correo');
+        }
+    } catch(error) {
+        console.log(`Error en el modelo al cambiar la password: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let desactivarCuenta = async(idUsuario, password) =>{
+    try{
+        let usuarioRegistrado = await Usuarios.findOne({where: {id_usuario: `${idUsuario}`}});
+        if (usuarioRegistrado != null){
+            let validarPassword = await bcrypt.compare(password, usuarioRegistrado.usuario_password);
+            if(validarPassword){
+                await Usuarios.update({usuario_activo: false}, {where: {id_usuario: `${idUsuario}`}});
+            } else {
+                console.log('Contraseña invalida');
+                throw new Error('Acceso denegado, contraseña invalida');
+            }
+        } else {
+            console.log('Usuario no registrado');
+            throw new Error('Acceso denegado, usuario invalido');
+        }
+    } catch(error){
+        console.log(`Error en el modelo al desactivar la cuenta: ${error}`);
         throw new Error(error.message);
     }
 }
 
 // Exportar modulos
-module.exports = {registrarUsuario, buscarUsuario, registrarPais, registrarEstado, registrarMunicipio, registrarTelefono, registrarLinkedin, registrarGithub};
+module.exports = {registrarUsuario, buscarUsuario, registrarPais, registrarEstado, registrarMunicipio, registrarTelefono, registrarLinkedin, registrarGithub, registrarImagen, cambiarPassword, desactivarCuenta};

@@ -2,7 +2,7 @@
 const controladorUsuarios = require('../app/controlador/controlador.usuarios');
 const rateLimit = require('express-rate-limit');
 const Joi = require('joi');
-const {modeloRegistro, modeloIniciarSesion, modeloDomicilioContacto} = require('./midd.modeloUsuarios');
+const {modeloRegistro, modeloIniciarSesion, modeloDomicilioContacto, modeloCambiarPassword, modeloPassword, modeloEducacion, modeloCertificacion, modeloIdiomas, modeloHobbies} = require('./midd.modeloUsuarios');
 
 // Middleware para limitar el número de peticiones por usuario
 const limiteConsultas = rateLimit({
@@ -36,6 +36,69 @@ let datosIniciarSesion = async(req, res, next) =>{
 let datosContacto = async(req, res, next) =>{
     try{
         await Joi.attempt(req.body, modeloDomicilioContacto);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+// Middleware para cambiar la password del usuario
+let datosCambiarPassword = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloCambiarPassword);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+// Middleware para validar la password de un usuario
+let datosPassword = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloPassword);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+// Middleware para validar datos de entrada para registrar información adicional de usuario
+let datosEducacion = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloEducacion);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+let datosCertificados = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloCertificacion);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+let datosIdiomas = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloIdiomas);
+        next();
+    } catch(error) {
+        console.log(error);
+        res.status(400).json({message: 'Acceso denegado: Alguno de los campos cumple con los estandares'});
+    }
+}
+
+let datosHobbies = async(req, res, next) =>{
+    try{
+        await Joi.attempt(req.body, modeloHobbies);
         next();
     } catch(error) {
         console.log(error);
@@ -77,4 +140,16 @@ let validarCredencialUsuario = async(req, res, next) =>{
 }
 
 // Exportar los modulos
-module.exports = {limiteConsultas, datosRegistro, datosIniciarSesion, datosContacto, validarToken, validarCredencialUsuario};
+module.exports = {
+    limiteConsultas,
+    datosRegistro, 
+    datosIniciarSesion, 
+    datosContacto, 
+    datosCambiarPassword, 
+    datosPassword, validarToken, 
+    validarCredencialUsuario, 
+    datosEducacion, 
+    datosCertificados, 
+    datosIdiomas,
+    datosHobbies
+};

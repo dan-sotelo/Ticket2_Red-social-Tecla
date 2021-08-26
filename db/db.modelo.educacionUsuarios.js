@@ -19,6 +19,18 @@ const Educacion = sequelize.define('educacion_de_usuarios',{
     id_grado_academico: {
        type: DataTypes.INTEGER,
        allowNull: false 
+    },
+    escuela:{
+        type: DataTypes.STRING(100),
+        allowNull: false
+    },
+    promedio:{
+        type: DataTypes.FLOAT,
+        allowNull: true
+    },
+    estatus:{
+        type: DataTypes.STRING(100),
+        allowNull: false
     }
 }, {
     timestamps: true,
