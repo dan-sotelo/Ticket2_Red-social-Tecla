@@ -21,7 +21,7 @@ const EntornosDeUsuarios = sequelize.define('entornos_de_usuarios',{
         allowNull: false
     },
     puntaje_tecla:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false
     }
 }, {

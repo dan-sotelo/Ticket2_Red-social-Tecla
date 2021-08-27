@@ -52,6 +52,19 @@ let buscarUsuario = async(usuario) =>{
     }
 }
 
+let listarUsuarios = async() =>{
+    try{
+        let usuarios = await Usuarios.findAll({
+            attributes: ['id_usuario',['usuario_nombre','nombre'], ['usuario_correo','correo'],['usuario_imagen','imagen']],
+            where: {usuario_activo: true}
+        });
+        return usuarios;
+    } catch(error) {
+        console.log(`Error en el modelo al listar los usuarios: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
 let registrarPais = async(idUsuario, pais) =>{
     let idPais;
     try{
@@ -182,4 +195,17 @@ let desactivarCuenta = async(idUsuario, password) =>{
 }
 
 // Exportar modulos
-module.exports = {registrarUsuario, buscarUsuario, registrarPais, registrarEstado, registrarMunicipio, registrarTelefono, registrarLinkedin, registrarGithub, registrarImagen, cambiarPassword, desactivarCuenta};
+module.exports = {
+    registrarUsuario, 
+    buscarUsuario, 
+    listarUsuarios, 
+    registrarPais, 
+    registrarEstado, 
+    registrarMunicipio,
+    registrarTelefono, 
+    registrarLinkedin, 
+    registrarGithub, 
+    registrarImagen,
+    cambiarPassword, 
+    desactivarCuenta
+};

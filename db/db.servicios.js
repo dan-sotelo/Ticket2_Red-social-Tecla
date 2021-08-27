@@ -164,7 +164,7 @@ let registrarEntornosProfesionales = async() =>{
 
 let registrarRelacionUsuarios = async() =>{
     try{
-        let relaciones = ['Solicitud enviada','Solicitud Cancelada','Contacto activo', 'Contacto Bloqueado', 'Contacto eliminado'];
+        let relaciones = ['Solicitud enviada','Solicitud recibida','Contacto activo'];
         for(let tipo = 0; tipo < relaciones.length; tipo++){
             let relacionRegistrada = await Relaciones.findOne({where: {relacion: `${relaciones[tipo]}`}});
             if (relacionRegistrada == null){

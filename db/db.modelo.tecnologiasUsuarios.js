@@ -21,7 +21,7 @@ const TecnologiasDeUsuarios = sequelize.define('tecnologias_de_usuarios',{
         allowNull: false
     },
     puntaje_tecla:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false
     }
 }, {

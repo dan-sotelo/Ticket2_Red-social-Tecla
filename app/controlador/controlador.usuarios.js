@@ -1,5 +1,6 @@
 // Importar los modulos necesarios
 const modeloUsuarios = require('../modelo/modelo.usuarios');
+const modeloGeneralUsuarios = require('../modelo/modelo.general.usuarios');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -58,6 +59,26 @@ let verificarToken = async(token) =>{
     }
 }
 
+let consultarUsuario = async(idUsuario) =>{
+    try{
+        let informacionUsuario = await modeloGeneralUsuarios.consultarUsuario(idUsuario);
+        return informacionUsuario;
+    } catch(error) {
+        console.log(`Error en el controlador al consultar la información de usuario: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let listarUsuarios = async() =>{
+    try{
+        let informacionUsuario = await modeloUsuarios.listarUsuarios();
+        return informacionUsuario;
+    } catch(error) {
+        console.log(`Error en el controlador al consultar la información de usuario: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
 let actualizarContactoUsuario = async(idUsuario, datos) =>{
     try{
         if (datos.pais != undefined){await modeloUsuarios.registrarPais(idUsuario, datos.pais)};
@@ -106,4 +127,15 @@ let desactivarCuenta = async(idUsuario, password) =>{
 }
 
 // Exportar los modulos
-module.exports = {registrarUsuario, buscarUsuario, generarToken, verificarToken, actualizarContactoUsuario, registrarImagen, cambiarPassword, desactivarCuenta};
+module.exports = {
+    registrarUsuario, 
+    buscarUsuario,
+    generarToken, 
+    verificarToken, 
+    consultarUsuario, 
+    listarUsuarios, 
+    actualizarContactoUsuario, 
+    registrarImagen, 
+    cambiarPassword, 
+    desactivarCuenta
+};

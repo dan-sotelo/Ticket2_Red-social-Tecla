@@ -3,14 +3,14 @@ const Hobbies = require('../../db/db.modelo.hobbies');
 const HobbiesDeUsuarios = require('../../db/db.modelo.hobbiesUsuarios');
 
 // Definir los modulos
-let identificarHobbie = async(hobbie) =>{
+let identificarHobby = async(hobbie) =>{
     try{
-        let hobbieRegistrado = await Hobbies.findOne({where: {hobbie: `${hobbie}`}});
-        if(hobbieRegistrado == null){
-            let nuevoHobbie = await Hobbies.create({hobbie: hobbie});
-            return nuevoHobbie.id_hobbie;
+        let hobbyRegistrado = await Hobbies.findOne({where: {hobbie: `${hobbie}`}});
+        if(hobbyRegistrado == null){
+            let nuevoHobby = await Hobbies.create({hobbie: hobbie});
+            return nuevoHobby.id_hobbie;
         } else {
-            return hobbieRegistrado.id_hobbie;
+            return hobbyRegistrado.id_hobbie;
         }
     } catch(error) {
         console.log(`Error en el modelo al consultar el hobbie: ${error}`);
@@ -18,17 +18,17 @@ let identificarHobbie = async(hobbie) =>{
     }
 }
 
-let registrarHobbies = async(idUsuario, infoHobbie) =>{
+let registrarHobbies = async(idUsuario, infoHobby) =>{
     try{
-        let idHobbie = await identificarHobbie(infoHobbie.hobbie)
-        let hobbieUsuario = await HobbiesDeUsuarios.findOne({where: {id_usuario: `${idUsuario}`, id_hobbie: `${idHobbie}`}});
-        if(hobbieUsuario == null){
+        let idHobby = await identificarHobby(infoHobby.hobby)
+        let hobbyUsuario = await HobbiesDeUsuarios.findOne({where: {id_usuario: `${idUsuario}`, id_hobbie: `${idHobby}`}});
+        if(hobbyUsuario == null){
             await HobbiesDeUsuarios.create({
                 id_usuario: idUsuario,
-                id_hobbie: idHobbie
+                id_hobbie: idHobby
             });
         } else {
-            throw new Error('El hobbie ya fue registrado, puede editarlo si desea');
+            throw new Error('El hobby ya fue registrado, puede editarlo si desea');
         }
     } catch (error) {
         console.log(`Error en el modelo al registrar los hobbies: ${error}`);
@@ -36,14 +36,14 @@ let registrarHobbies = async(idUsuario, infoHobbie) =>{
     }
 }
 
-let actualizarHobbies = async(idUsuario, infoHobbie, idHobbieUsuario) =>{
+let actualizarHobbies = async(idUsuario, infoHobby, idHobbyUsuario) =>{
     try{
-        let hobbieUsuario = await HobbiesDeUsuarios.findOne({where: {id_hobbie_de_usuario: `${idHobbieUsuario}`}});
-        if (hobbieUsuario != null && hobbieUsuario.id_usuario == idUsuario){
-            let idHobbie = await identificarHobbie(infoHobbie.hobbie);
-            await HobbiesDeUsuarios.update({id_hobbie: `${idHobbie}`}, {where: {id_hobbie_de_usuario: `${idHobbieUsuario}`}});
+        let hobbyUsuario = await HobbiesDeUsuarios.findOne({where: {id_hobbie_de_usuario: `${idHobbyUsuario}`}});
+        if (hobbyUsuario != null && hobbyUsuario.id_usuario == idUsuario){
+            let idHobby = await identificarHobby(infoHobby.hobby);
+            await HobbiesDeUsuarios.update({id_hobbie: `${idHobby}`}, {where: {id_hobbie_de_usuario: `${idHobbyUsuario}`}});
         } else {
-            throw new Error('No existe el registro del hobbie solicitado');
+            throw new Error('No existe el registro del hobby solicitado');
         }
     } catch(error) {
         console.log(`Error en el modelo al actualizar el hobbie del usuario: ${error}`);
@@ -51,13 +51,13 @@ let actualizarHobbies = async(idUsuario, infoHobbie, idHobbieUsuario) =>{
     }
 }
 
-let eliminarHobbies = async(idUsuario, idHobbieUsuario) =>{
+let eliminarHobbies = async(idUsuario, idHobbyUsuario) =>{
     try{
-        let hobbieUsuario = await HobbiesDeUsuarios.findOne({where: {id_hobbie_de_usuario: `${idHobbieUsuario}`, id_usuario: `${idUsuario}`}});
-        if(hobbieUsuario != null){
-            await HobbiesDeUsuarios.destroy({where: {id_hobbie_de_usuario: `${idHobbieUsuario}`, id_usuario: `${idUsuario}`}});
+        let hobbyUsuario = await HobbiesDeUsuarios.findOne({where: {id_hobbie_de_usuario: `${idHobbyUsuario}`, id_usuario: `${idUsuario}`}});
+        if(hobbyUsuario != null){
+            await HobbiesDeUsuarios.destroy({where: {id_hobbie_de_usuario: `${idHobbyUsuario}`, id_usuario: `${idUsuario}`}});
         } else {
-            throw new Error('No existe el registro del hobbie solicitado');
+            throw new Error('No existe el registro del hobby solicitado');
         }
     } catch(error) {
         console.log(`Error en el modelo al eliminar el hobbie: ${error}`);
@@ -68,14 +68,8 @@ let eliminarHobbies = async(idUsuario, idHobbieUsuario) =>{
 let listarHobbies = async(idUsuario) =>{
     try{
         let hobbies = await HobbiesDeUsuarios.findAll({
-            attributes: {exclude: ['id_hobbie']},
-            include:[
-                {
-                    model: Hobbies,
-                    attributes: ['id_hobbie','hobbie'],
-                    required: true
-                }
-            ],
+            attributes: [['id_hobbie_de_usuario','idHobbyUsuario'],'fecha_registro','fecha_actualizacion'],
+            include: [{model: Hobbies, attributes: [['hobbie','hobby']], required: true}],
             where: {id_usuario: `${idUsuario}`}});
         return hobbies;
     } catch(error) {

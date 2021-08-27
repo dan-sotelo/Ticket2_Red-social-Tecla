@@ -92,18 +92,10 @@ let eliminarIdiomas = async(idUsuario, idIdiomaUsuario) =>{
 let listarIdiomas = async(idUsuario) =>{
     try{
         let idiomas = await IdiomasDeUsuarios.findAll({
-            attributes: {exclude: ['id_idioma','id_nivel']},
-            include:[
-                {
-                    model: Idiomas,
-                    attributes: ['id_idioma','idioma'],
-                    required: true
-                },
-                {
-                    model: DominioIdiomas,
-                    attributes: ['id_nivel','nivel'],
-                    required: true
-                }
+            attributes: [['id_idioma_de_usuario','idIdioma'],'fecha_registro','fecha_actualizacion'],
+            include: [
+                {model: Idiomas, attributes: ['idioma'], required: true},
+                {model: DominioIdiomas, attributes: ['nivel'], required: true}
             ],
             where: {id_usuario: `${idUsuario}`}});
         return idiomas;

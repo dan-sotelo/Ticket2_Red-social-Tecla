@@ -41,6 +41,7 @@ const vistaUsuarios = require('./app/vista/vista.usuarios');
 const vistaEducacion = require('./app/vista/vista.educacion');
 const vistaIdiomas = require('./app/vista/vista.idiomas');
 const vistaHobbies = require('./app/vista/vista.hobbies');
+const vistaContactos = require('./app/vista/vista.contactos');
 
 // Middlewares globales
 app.use(express.json());
@@ -102,3 +103,4 @@ vistaUsuarios(app);
 vistaEducacion(app);
 vistaIdiomas(app);
 vistaHobbies(app);
+vistaContactos(app);

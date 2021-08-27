@@ -139,17 +139,37 @@ let validarCredencialUsuario = async(req, res, next) =>{
     }
 }
 
+// Validar credenciales mixtas
+let validarCredenciales = async(req, res, next) =>{
+    let infoUsuario = req.params.usuario;
+    let administrador = 1;
+    let developerRegistrado = 2;
+    let empresaPartner = 3;
+    try{
+        if(infoUsuario.credencial == administrador || infoUsuario.credencial == developerRegistrado || infoUsuario.credencial == empresaPartner){
+            return next();
+        } else {
+            throw new Error ('Usuario invalido');
+        }
+    } catch(error) {
+        console.log(error.message);
+        res.status(400).json({message: `Acceso denegado: ${error.message}`});
+    }
+}
+
 // Exportar los modulos
 module.exports = {
     limiteConsultas,
-    datosRegistro, 
-    datosIniciarSesion, 
-    datosContacto, 
-    datosCambiarPassword, 
-    datosPassword, validarToken, 
-    validarCredencialUsuario, 
-    datosEducacion, 
-    datosCertificados, 
+    datosRegistro,
+    datosIniciarSesion,
+    datosContacto,
+    datosCambiarPassword,
+    datosPassword,
+    datosEducacion,
+    datosCertificados,
     datosIdiomas,
-    datosHobbies
+    datosHobbies,
+    validarToken,
+    validarCredencialUsuario,
+    validarCredenciales
 };

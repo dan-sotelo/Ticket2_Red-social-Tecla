@@ -76,14 +76,8 @@ let eliminarEducacion = async(idUsuario, idEducacion) =>{
 let listarEducacion = async(idUsuario) =>{
     try{
         let educacion = await Educacion.findAll({
-            attributes: {exclude: ['id_grado_academico']},
-            include:[
-                {
-                    model: GradosAcademicos,
-                    attributes: ['id_grado','grado_academico'],
-                    required: true
-                }
-            ],
+            attributes: [['id_educacion','idEducacion'],'escuela','estatus','promedio','fecha_registro','fecha_actualizacion'],
+            include:[{ model: GradosAcademicos, attributes: [['grado_academico','gradoAcademico']], required: true}],
             where: {id_usuario: `${idUsuario}`}});
         return educacion;
     } catch(error) {
@@ -150,7 +144,9 @@ let eliminarCertificacion = async(idUsuario, idCertificacion) =>{
 
 let listarCertificaciones = async(idUsuario) =>{
     try{
-        let certificaciones = await CertificacionesDeUsuarios.findAll({where: {id_usuario: `${idUsuario}`}});
+        let certificaciones = await CertificacionesDeUsuarios.findAll({
+            attributes: [['id_certificacion','idCertificacion'],'certificacion','institucion','expedicion','expiracion','folio','fecha_registro','fecha_actualizacion'],
+            where: {id_usuario: `${idUsuario}`}});
         return certificaciones;
     } catch(error) {
         console.log(`Error en el modelo al eliminar la certificacion: ${error}`);

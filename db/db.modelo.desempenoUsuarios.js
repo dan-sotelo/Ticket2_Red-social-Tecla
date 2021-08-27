@@ -21,7 +21,7 @@ const DesempenoDeUsuarios = sequelize.define('desempeno_de_usuarios',{
         allowNull: false
     },
     puntaje_tecla:{
-        type: DataTypes.INTEGER,
+        type: DataTypes.FLOAT,
         allowNull: false
     }
 }, {

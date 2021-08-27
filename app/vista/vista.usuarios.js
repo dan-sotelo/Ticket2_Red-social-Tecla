@@ -29,6 +29,42 @@ module.exports = async(app) =>{
         }
     });
 
+    // Endpoint para listar la información completa del perfil de un usuario
+    app.get('/teclers/perfil', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+        let usuario = req.params.usuario;
+        try{
+            let informacionUsuario = await controladorUsuarios.consultarUsuario(usuario.id_usuario);
+            res.status(200).json({message: 'Consulta exitosa', informacionUsuario});
+        } catch(error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    });
+
+    // Endpoint para listar usuarios registrados y su información general (Acceso para usuarios registrados, empresas Partner o Administrador)
+    app.get('/teclers', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
+        try {
+            let usuarios = await controladorUsuarios.listarUsuarios();
+            res.status(200).json({message: 'Consulta exitosa', usuarios});
+        } catch (error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    })
+
+    // Endpoint para visualizar la información completa de un usuario (Acceso para usuarios registrados, empresas Partner o Administrador)
+    app.get('/teclers/perfil/:idUsuario', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
+        let idUsuario = req.params.idUsuario;
+        try{
+            let informacionUsuario = await controladorUsuarios.consultarUsuario(idUsuario);
+            res.status(200).json({message: 'Consulta exitosa', informacionUsuario});
+        } catch(error) {
+            console.log(error.message);
+            res.status(500).json({message: error.message});
+        }
+    });
+
+
     // Endpoint para completar o actualizar la información de domicilio y contacto (pais, estado, municipio, telefono, LinkedIn, GitHub)
     app.patch('/teclers/perfil/contacto', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosContacto, async(req,res) =>{
         let usuario = req.params.usuario;
