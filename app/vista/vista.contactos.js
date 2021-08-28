@@ -5,9 +5,9 @@ const middUsuarios = require('../../middlewares/midd.usuarios');
 // Definir los endpoints y exportar los modulos
 module.exports = async(app) =>{
     // Endpoint para realizar una solicitud de amistad entre dos usuarios
-    app.post('/teclers/perfil/amistad/:idReceptor', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.post('/teclers/perfil/contactos/:idUsuario', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let emisor = req.params.usuario;
-        let idReceptor = req.params.idReceptor;
+        let idReceptor = req.params.idUsuario;
         try{
             let solicitud = await controladorContactos.enviarSolicitud(emisor.id_usuario, idReceptor);
             res.status(200).json({message: 'Solicitud de amistad realizada', solicitud})
@@ -18,7 +18,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para visualizar las solicitudes de amistad enviadas
-    app.get('/teclers/perfil/amistad/solicitudes_enviadas', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.get('/teclers/perfil/contactos/solicitudes_enviadas', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         try{
             let solicitudesEnviadas = await controladorContactos.listarConexiones(usuario.id_usuario, 1);
@@ -30,7 +30,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para visualizar las solicitudes de amistad recibidas
-    app.get('/teclers/perfil/amistad/solicitudes_recibidas', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.get('/teclers/perfil/contactos/solicitudes_recibidas', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         try{
             let solicitudesRecibidas = await controladorContactos.listarConexiones(usuario.id_usuario, 2);
@@ -41,8 +41,8 @@ module.exports = async(app) =>{
         }
     });
 
-    // Endpoint para visualizar los contactos activos de usuarios
-    app.get('/teclers/perfil/amistad/contactos', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    // Endpoint para visualizar los contactos del usuario
+    app.get('/teclers/perfil/contactos', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         try{
             let listaDeContactos = await controladorContactos.listarConexiones(usuario.id_usuario, 3);
@@ -54,7 +54,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para aceptar una solicitud de amistad
-    app.patch('/teclers/perfil/amistad/aceptar/:idConexion', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.patch('/teclers/perfil/contactos/aceptar/:idConexion', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         let idConexion = req.params.idConexion
         try{
@@ -67,7 +67,7 @@ module.exports = async(app) =>{
     })
 
     // Endpoint para eliminar un contacto o cancelar una solicitud de amistad
-    app.delete('/teclers/perfil/amistad/borrar/:idConexion', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.delete('/teclers/perfil/contactos/borrar/:idConexion', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         let idConexion = req.params.idConexion;
         try{

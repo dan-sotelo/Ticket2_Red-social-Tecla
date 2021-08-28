@@ -100,7 +100,7 @@ let listarIdiomas = async(idUsuario) =>{
             where: {id_usuario: `${idUsuario}`}});
         return idiomas;
     } catch(error) {
-        console.log(`Error en el modelo al eliminar la certificacion: ${error}`);
+        console.log(`Error en el modelo al listar los idiomas: ${error}`);
         throw new Error(error.message);
     }
 }

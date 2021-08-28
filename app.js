@@ -6,8 +6,7 @@ const cors = require('cors');
 const middUsuarios = require('./middlewares/midd.usuarios');
 
 const sequelize = require('./db/db.conexion');
-const CredencialUsuarios = require('./db/db.modelo.credencialUsuarios');
-const CredencialEmpresas = require('./db/db.modelo.credencialEmpresas');
+const Credenciales = require('./db/db.modelo.credenciales');
 const GradosAcademicos = require('./db/db.modelo.gradosAcademicos');
 const Paises = require('./db/db.modelo.paises');
 const Estados = require('./db/db.modelo.estados');
@@ -42,6 +41,8 @@ const vistaEducacion = require('./app/vista/vista.educacion');
 const vistaIdiomas = require('./app/vista/vista.idiomas');
 const vistaHobbies = require('./app/vista/vista.hobbies');
 const vistaContactos = require('./app/vista/vista.contactos');
+const vistaEmpresas = require('./app/vista/vista.empresas');
+const vistaAdministrador = require('./app/vista/vista.administrador');
 
 // Middlewares globales
 app.use(express.json());
@@ -56,8 +57,7 @@ app.set('views', __dirname + '/views');
 // Inicializar el servidor
 const iniciarServidor = async () =>{
     try {
-        await CredencialUsuarios.sync();
-        await CredencialEmpresas.sync();
+        await Credenciales.sync();
         await GradosAcademicos.sync();
         await Paises.sync();
         await Estados.sync();
@@ -104,3 +104,5 @@ vistaEducacion(app);
 vistaIdiomas(app);
 vistaHobbies(app);
 vistaContactos(app);
+vistaEmpresas(app);
+vistaAdministrador(app);

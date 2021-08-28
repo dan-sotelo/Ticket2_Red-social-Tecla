@@ -2,7 +2,8 @@
 const controladorUsuarios = require('../app/controlador/controlador.usuarios');
 const rateLimit = require('express-rate-limit');
 const Joi = require('joi');
-const {modeloRegistro, modeloIniciarSesion, modeloDomicilioContacto, modeloCambiarPassword, modeloPassword, modeloEducacion, modeloCertificacion, modeloIdiomas, modeloHobbies} = require('./midd.modeloUsuarios');
+const {modeloRegistro, modeloLogin, modeloInformacion, modeloCambiarPassword} = require('./midd.modeloUsuarios');
+const {modeloPassword, modeloEducacion, modeloCertificacion, modeloIdiomas, modeloHobbies} = require('./midd.modeloUsuarios');
 
 // Middleware para limitar el número de peticiones por usuario
 const limiteConsultas = rateLimit({
@@ -11,7 +12,7 @@ const limiteConsultas = rateLimit({
     message: 'Exedio el número de peticiones al servidor'
 });
 
-// Middleware para validar los datos ingresados para inciar sesión o registrar un usuario
+// Middlewares para validar los datos ingresados
 let datosRegistro = async(req, res, next) =>{
     try{
         await Joi.attempt(req.body, modeloRegistro);
@@ -22,9 +23,9 @@ let datosRegistro = async(req, res, next) =>{
     }
 }
 
-let datosIniciarSesion = async(req, res, next) =>{
+let datosLogin = async(req, res, next) =>{
     try{
-        await Joi.attempt(req.body, modeloIniciarSesion);
+        await Joi.attempt(req.body, modeloLogin);
         next();
     } catch(error) {
         console.log(error);
@@ -32,10 +33,9 @@ let datosIniciarSesion = async(req, res, next) =>{
     }
 }
 
-// Middleware para validar el ingreso de datos para completar el perfil de usuario
-let datosContacto = async(req, res, next) =>{
+let datosInformacion = async(req, res, next) =>{
     try{
-        await Joi.attempt(req.body, modeloDomicilioContacto);
+        await Joi.attempt(req.body, modeloInformacion);
         next();
     } catch(error) {
         console.log(error);
@@ -43,7 +43,6 @@ let datosContacto = async(req, res, next) =>{
     }
 }
 
-// Middleware para cambiar la password del usuario
 let datosCambiarPassword = async(req, res, next) =>{
     try{
         await Joi.attempt(req.body, modeloCambiarPassword);
@@ -54,7 +53,6 @@ let datosCambiarPassword = async(req, res, next) =>{
     }
 }
 
-// Middleware para validar la password de un usuario
 let datosPassword = async(req, res, next) =>{
     try{
         await Joi.attempt(req.body, modeloPassword);
@@ -65,7 +63,6 @@ let datosPassword = async(req, res, next) =>{
     }
 }
 
-// Middleware para validar datos de entrada para registrar información adicional de usuario
 let datosEducacion = async(req, res, next) =>{
     try{
         await Joi.attempt(req.body, modeloEducacion);
@@ -112,8 +109,15 @@ let validarToken = async(req, res, next) =>{
         if (req.headers.authorization != undefined){
             const token = req.headers.authorization.split(' ')[1];
             let verificacion = await controladorUsuarios.verificarToken(token);
-            req.params.usuario = verificacion.usuario;
-            return next();
+            if(verificacion.usuario != undefined){
+                req.params.usuario = verificacion.usuario;
+                console.log(req.params.usuario)
+                return next();
+            } else if (verificacion.empresa != undefined){
+                req.params.empresa = verificacion.empresa;
+                console.log(req.params.empresa)
+                return next();
+            }
         } else {
             throw new Error ('Se requiere autorización para acceder a este sistema');
         }
@@ -123,30 +127,11 @@ let validarToken = async(req, res, next) =>{
     }
 }
 
-// Validar credenciales de usuario
-let validarCredencialUsuario = async(req, res, next) =>{
-    let infoUsuario = req.params.usuario;
-    let developerRegistrado = 2;
-    try{
-        if(infoUsuario.credencial == developerRegistrado){
-            return next();
-        } else {
-            throw new Error ('Usuario invalido');
-        }
-    } catch(error) {
-        console.log(error.message);
-        res.status(400).json({message: `Acceso denegado: ${error.message}`});
-    }
-}
-
-// Validar credenciales mixtas
+// Middleware para validar credenciales
 let validarCredenciales = async(req, res, next) =>{
     let infoUsuario = req.params.usuario;
-    let administrador = 1;
-    let developerRegistrado = 2;
-    let empresaPartner = 3;
     try{
-        if(infoUsuario.credencial == administrador || infoUsuario.credencial == developerRegistrado || infoUsuario.credencial == empresaPartner){
+        if(infoUsuario.credencial == 1 || infoUsuario.credencial == 2){
             return next();
         } else {
             throw new Error ('Usuario invalido');
@@ -161,8 +146,8 @@ let validarCredenciales = async(req, res, next) =>{
 module.exports = {
     limiteConsultas,
     datosRegistro,
-    datosIniciarSesion,
-    datosContacto,
+    datosLogin,
+    datosInformacion,
     datosCambiarPassword,
     datosPassword,
     datosEducacion,
@@ -170,6 +155,5 @@ module.exports = {
     datosIdiomas,
     datosHobbies,
     validarToken,
-    validarCredencialUsuario,
     validarCredenciales
 };

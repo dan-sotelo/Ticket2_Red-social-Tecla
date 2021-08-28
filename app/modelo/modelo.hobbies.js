@@ -3,11 +3,11 @@ const Hobbies = require('../../db/db.modelo.hobbies');
 const HobbiesDeUsuarios = require('../../db/db.modelo.hobbiesUsuarios');
 
 // Definir los modulos
-let identificarHobby = async(hobbie) =>{
+let identificarHobby = async(hobby) =>{
     try{
-        let hobbyRegistrado = await Hobbies.findOne({where: {hobbie: `${hobbie}`}});
+        let hobbyRegistrado = await Hobbies.findOne({where: {hobbie: `${hobby}`}});
         if(hobbyRegistrado == null){
-            let nuevoHobby = await Hobbies.create({hobbie: hobbie});
+            let nuevoHobby = await Hobbies.create({hobbie: hobby});
             return nuevoHobby.id_hobbie;
         } else {
             return hobbyRegistrado.id_hobbie;

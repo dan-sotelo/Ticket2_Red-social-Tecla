@@ -81,7 +81,7 @@ let listarEducacion = async(idUsuario) =>{
             where: {id_usuario: `${idUsuario}`}});
         return educacion;
     } catch(error) {
-        console.log(`Error en el modelo al eliminar la certificacion: ${error}`);
+        console.log(`Error en el modelo al listar la educacion del usuario: ${error}`);
         throw new Error(error.message);
     }
 }

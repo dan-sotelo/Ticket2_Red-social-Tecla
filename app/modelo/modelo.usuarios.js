@@ -44,7 +44,7 @@ let buscarUsuario = async(usuario) =>{
             }
         } else {
             console.log('Usuario no registrado');
-            throw new Error('El usuario no esta registrado, revise su correo');
+            throw new Error('El usuario no esta registrado');
         }
     } catch(error){
         console.log(`Error en el modelo al buscar usuario: ${error}`)
@@ -152,9 +152,9 @@ let registrarImagen = async(idUsuario, imagen) =>{
     }
 }
 
-let cambiarPassword = async(usuario) =>{
+let cambiarPassword = async(usuario, idUsuario) =>{
     try{
-        let usuarioRegistrado = await Usuarios.findOne({where: {usuario_correo: `${usuario.correo}`}});
+        let usuarioRegistrado = await Usuarios.findOne({where: {id_usuario: `${idUsuario}`, usuario_correo: `${usuario.correo}`}});
         if(usuarioRegistrado != null){
             let validarPasswordActual = await bcrypt.compare(usuario.passwordActual, usuarioRegistrado.usuario_password);
             if(validarPasswordActual){

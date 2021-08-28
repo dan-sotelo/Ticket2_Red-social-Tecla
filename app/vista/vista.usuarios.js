@@ -5,7 +5,7 @@ const middUsuarios = require('../../middlewares/midd.usuarios');
 // Definir los endpoints y exportar los modulos
 module.exports = async(app) =>{
     // Endpoint para el registro de usuarios (Registrar: Nombre completo, correo, password, edad)
-    app.post('/teclers/nuevo_registro', middUsuarios.datosRegistro ,async(req,res) =>{
+    app.post('/teclers/registro', middUsuarios.datosRegistro ,async(req,res) =>{
         let usuario = req.body;
         try{
             let nuevoUsuario = await controladorUsuarios.registrarUsuario(usuario);
@@ -17,7 +17,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para el inicio de sesión de usuarios
-    app.post('/teclers/iniciar_sesion', middUsuarios.datosIniciarSesion, async(req,res) =>{
+    app.post('/teclers/login', middUsuarios.datosLogin, async(req,res) =>{
         let usuario = req.body;
         try{
             let infoUsuario = await controladorUsuarios.buscarUsuario(usuario);
@@ -30,7 +30,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para listar la información completa del perfil de un usuario
-    app.get('/teclers/perfil', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.get('/teclers/perfil', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         try{
             let informacionUsuario = await controladorUsuarios.consultarUsuario(usuario.id_usuario);
@@ -41,37 +41,13 @@ module.exports = async(app) =>{
         }
     });
 
-    // Endpoint para listar usuarios registrados y su información general (Acceso para usuarios registrados, empresas Partner o Administrador)
-    app.get('/teclers', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
-        try {
-            let usuarios = await controladorUsuarios.listarUsuarios();
-            res.status(200).json({message: 'Consulta exitosa', usuarios});
-        } catch (error) {
-            console.log(error.message);
-            res.status(500).json({message: error.message});
-        }
-    })
-
-    // Endpoint para visualizar la información completa de un usuario (Acceso para usuarios registrados, empresas Partner o Administrador)
-    app.get('/teclers/perfil/:idUsuario', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
-        let idUsuario = req.params.idUsuario;
-        try{
-            let informacionUsuario = await controladorUsuarios.consultarUsuario(idUsuario);
-            res.status(200).json({message: 'Consulta exitosa', informacionUsuario});
-        } catch(error) {
-            console.log(error.message);
-            res.status(500).json({message: error.message});
-        }
-    });
-
-
     // Endpoint para completar o actualizar la información de domicilio y contacto (pais, estado, municipio, telefono, LinkedIn, GitHub)
-    app.patch('/teclers/perfil/contacto', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosContacto, async(req,res) =>{
+    app.patch('/teclers/perfil/informacion', middUsuarios.validarToken, middUsuarios.validarCredenciales, middUsuarios.datosInformacion, async(req,res) =>{
         let usuario = req.params.usuario;
         let datos = req.body;
         try{
             if (Object.keys(datos).length > 0){
-                await controladorUsuarios.actualizarContactoUsuario(usuario.id_usuario, datos);
+                await controladorUsuarios.actualizarInformacion(usuario.id_usuario, datos);
                 res.status(200).json({message: 'Actualización de perfil exitoso'});
             } else {
                 res.status(400).json({message: 'No se recibio ningun valor'});
@@ -83,12 +59,16 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para registrar o actualizar la imagen de perfil del usuario
-    app.patch('/teclers/perfil/imagen', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, async(req, res) =>{
+    app.patch('/teclers/perfil/imagen', middUsuarios.validarToken, middUsuarios.validarCredenciales, async(req, res) =>{
         let usuario = req.params.usuario;
         let datos = req.body;
         try{
-            await controladorUsuarios.registrarImagen(usuario.id_usuario, datos.imagen);
-            res.status(200).json({message: 'Actualización exitosa de la foto de perfil'});
+            if(datos.imagen){
+                await controladorUsuarios.registrarImagen(usuario.id_usuario, datos.imagen);
+                res.status(200).json({message: 'Actualización exitosa de la foto de perfil'});
+            } else {
+                res.status(400).json({message: 'No se registro ninguna respuesta'});
+            }
         } catch(error) {
             console.log(error.message);
             res.status(500).json({message: error.message});
@@ -96,12 +76,12 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para cambiar la password
-    app.patch('/teclers/perfil/cambiar_password', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosCambiarPassword, async(req, res) =>{
+    app.patch('/teclers/perfil/password', middUsuarios.validarToken, middUsuarios.validarCredenciales, middUsuarios.datosCambiarPassword, async(req, res) =>{
         let usuario = req.params.usuario;
         let datosUsuario = req.body;
         try{
             if(datosUsuario.correo == usuario.correo){
-                await controladorUsuarios.cambiarPassword(datosUsuario);
+                await controladorUsuarios.cambiarPassword(datosUsuario, usuario.id_usuario);
                 res.status(200).json({message: 'Actualización exitosa de password'});
             } else {
                 throw new Error ('Usuario invalido');
@@ -113,7 +93,7 @@ module.exports = async(app) =>{
     });
 
     // Endpoint para desactivar la cuenta
-    app.patch('/teclers/perfil/desactivacion', middUsuarios.validarToken, middUsuarios.validarCredencialUsuario, middUsuarios.datosPassword, async(req, res) =>{
+    app.patch('/teclers/perfil/desactivacion', middUsuarios.validarToken, middUsuarios.validarCredenciales, middUsuarios.datosPassword, async(req, res) =>{
         let usuario = req.params.usuario;
         let datosUsuario = req.body;
         try{

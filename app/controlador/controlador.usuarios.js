@@ -79,7 +79,7 @@ let listarUsuarios = async() =>{
     }
 }
 
-let actualizarContactoUsuario = async(idUsuario, datos) =>{
+let actualizarInformacion = async(idUsuario, datos) =>{
     try{
         if (datos.pais != undefined){await modeloUsuarios.registrarPais(idUsuario, datos.pais)};
         if (datos.estado != undefined){await modeloUsuarios.registrarEstado(idUsuario, datos.estado)};
@@ -106,11 +106,11 @@ let registrarImagen = async(idUsuario, imagen) =>{
     }
 }
 
-let cambiarPassword = async(usuario) =>{
+let cambiarPassword = async(usuario, idUsuario) =>{
     try{
         let encriptacion = await bcrypt.genSalt(10);
         usuario.passwordNueva = await bcrypt.hash(usuario.passwordNueva, encriptacion);
-        await modeloUsuarios.cambiarPassword(usuario);
+        await modeloUsuarios.cambiarPassword(usuario, idUsuario);
     } catch(error){
         console.log(`Error en el controlador al cambiar la password: ${error}`);
         throw new Error(error.message);
@@ -128,14 +128,14 @@ let desactivarCuenta = async(idUsuario, password) =>{
 
 // Exportar los modulos
 module.exports = {
-    registrarUsuario, 
+    registrarUsuario,
     buscarUsuario,
-    generarToken, 
-    verificarToken, 
-    consultarUsuario, 
-    listarUsuarios, 
-    actualizarContactoUsuario, 
-    registrarImagen, 
-    cambiarPassword, 
+    generarToken,
+    verificarToken,
+    consultarUsuario,
+    listarUsuarios,
+    actualizarInformacion,
+    registrarImagen,
+    cambiarPassword,
     desactivarCuenta
 };

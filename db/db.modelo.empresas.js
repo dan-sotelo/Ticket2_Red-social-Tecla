@@ -1,7 +1,7 @@
 // Importar los modulos necesarios
 const {DataTypes, Model} = require('sequelize');
 const sequelize = require('./db.conexion');
-const CredencialEmpresas = require('./db.modelo.credencialEmpresas');
+const Credenciales = require('./db.modelo.credenciales');
 const Paises = require('./db.modelo.paises');
 const Estados = require('./db.modelo.estados');
 const Municipios = require('./db.modelo.municipios');
@@ -36,7 +36,7 @@ const Empresas = sequelize.define('empresas',{
     },
     id_pais:{
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
     },
     id_estado:{
         type: DataTypes.INTEGER,
@@ -59,8 +59,8 @@ const Empresas = sequelize.define('empresas',{
     createdAt: 'fecha_registro',
     updatedAt: 'fecha_actualizacion'
 });
-Empresas.belongsTo(CredencialEmpresas, {foreignKey: 'id_credencial'});
-CredencialEmpresas.hasMany(Empresas, {foreignKey: 'id_credencial'});
+Empresas.belongsTo(Credenciales, {foreignKey: 'id_credencial'});
+Credenciales.hasMany(Empresas, {foreignKey: 'id_credencial'});
 
 Empresas.belongsTo(Paises, {foreignKey: 'id_pais'});
 Paises.hasMany(Empresas, {foreignKey: 'id_pais'});

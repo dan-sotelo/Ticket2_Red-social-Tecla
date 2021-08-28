@@ -1,6 +1,5 @@
 // Importar los modulos necesarios
-const CredencialUsuarios = require('./db.modelo.credencialUsuarios');
-const CredencialEmpresas = require('./db.modelo.credencialEmpresas');
+const Credenciales = require('./db.modelo.credenciales');
 const GradosAcademicos = require('./db.modelo.gradosAcademicos');
 const Idiomas = require('./db.modelo.idiomas');
 const DominioIdiomas = require('./db.modelo.dominioIdiomas');
@@ -12,33 +11,18 @@ const Entornos = require('./db.modelo.entornos');
 const Relaciones = require('./db.modelo.relacionUsuarios');
 
 // Modulos para insertar valores iniciales en la tablas
-let registrarCredencialesDeUsuarios = async() =>{
+let registrarCredenciales = async() =>{
     try{
-        let credenciales = ['Administrador','Developer registrado', 'Usuario solicitante'];
+        let credenciales = ['Administrador','Developer registrado', 'Empresa Partner','Empresa solicitante','Usuario Solicitante'];
         for(let tipo = 0; tipo < credenciales.length; tipo++){
-            let credencialRegistrada = await CredencialUsuarios.findOne({where: {credencial_usuario: `${credenciales[tipo]}`}});
-            if (credencialRegistrada== null){
-                await CredencialUsuarios.create({credencial_usuario: credenciales[tipo]});
+            let credencialRegistrada = await Credenciales.findOne({where: {credencial: `${credenciales[tipo]}`}});
+            if (credencialRegistrada == null){
+                await Credenciales.create({credencial: credenciales[tipo]});
             }
         }
     } catch(error) {
         console.log(`Ocurrio un error al registrar las credenciales de usuario: ${error}`)
         throw new Error(`Ocurrio un error al registrar las credenciales de usuario: ${error.message}`)
-    }
-}
-
-let registrarCredencialesDeEmpresas = async() =>{
-    try{
-        let credenciales = ['Empresa Partner', 'Empresa solicitante'];
-        for(let tipo = 0; tipo < credenciales.length; tipo++){
-            let credencialRegistrada = await CredencialEmpresas.findOne({where: {credencial_empresa: `${credenciales[tipo]}`}});
-            if (credencialRegistrada== null){
-                await CredencialEmpresas.create({credencial_empresa: credenciales[tipo]});
-            }
-        }
-    } catch(error) {
-        console.log(`Ocurrio un error al registrar las credenciales de empresas: ${error}`)
-        throw new Error(`Ocurrio un error al registrar las credenciales de empresas: ${error.message}`)
     }
 }
 
@@ -179,8 +163,7 @@ let registrarRelacionUsuarios = async() =>{
 
 let registrarValoresIniciales = async() =>{
     try{
-        await registrarCredencialesDeUsuarios();
-        await registrarCredencialesDeEmpresas();
+        await registrarCredenciales();
         await registrarGradosAcademicos();
         await registrarIdiomas();
         await registrarDominioDeIdiomas();

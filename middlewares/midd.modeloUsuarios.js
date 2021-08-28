@@ -10,12 +10,12 @@ module.exports = {
         edad: Joi.number().integer().required(),
     }),
 
-    modeloIniciarSesion: Joi.object().keys({
+    modeloLogin: Joi.object().keys({
         correo: Joi.string().email().max(50).required(),
         password: Joi.string().regex(/^[a-zA-Z0-9]{8,15}$/).min(8).required()
     }).with('correo','password'),
 
-    modeloDomicilioContacto: Joi.object().keys({
+    modeloInformacion: Joi.object().keys({
         pais: Joi.string().min(3).max(20),
         estado: Joi.string().min(3).max(20),
         municipio: Joi.string().min(3).max(40),
@@ -55,6 +55,6 @@ module.exports = {
     }), 
 
     modeloHobbies: Joi.object().keys({
-        hobbie: Joi.string().min(3).max(20).required()
+        hobby: Joi.string().min(3).max(20).required()
     })
 }

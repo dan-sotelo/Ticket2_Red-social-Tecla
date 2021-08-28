@@ -1,7 +1,7 @@
 // Importar los modulos necesarios
 const {DataTypes, Model} = require('sequelize');
 const sequelize = require('./db.conexion');
-const CredencialUsuarios = require('./db.modelo.credencialUsuarios');
+const Credenciales = require('./db.modelo.credenciales');
 const Paises = require('./db.modelo.paises');
 const Estados = require('./db.modelo.estados');
 const Municipios = require('./db.modelo.municipios');
@@ -71,8 +71,8 @@ const Usuarios = sequelize.define('usuarios',{
     createdAt: 'fecha_registro',
     updatedAt: 'fecha_actualizacion'
 });
-Usuarios.belongsTo(CredencialUsuarios,{foreignKey: 'id_credencial'});
-CredencialUsuarios.hasMany(Usuarios,{foreignKey: 'id_credencial'});
+Usuarios.belongsTo(Credenciales,{foreignKey: 'id_credencial'});
+Credenciales.hasMany(Usuarios,{foreignKey: 'id_credencial'});
 
 Usuarios.belongsTo(Paises, {foreignKey: 'id_pais'});
 Paises.hasMany(Usuarios, {foreignKey: 'id_pais'});

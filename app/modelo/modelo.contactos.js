@@ -37,18 +37,10 @@ let enviarSolicitud = async(idEmisor, idReceptor) =>{
 let listarConexiones = async(idUsuario, idRelacion) =>{
     try{
         let conexion = await Contactos.findAll({
-            attributes: ['id_conexion','fecha_registro'],
+            attributes: [['id_conexion','idConexion'],'fecha_registro'],
             include: [
-                {
-                    model: Usuarios,
-                    attributes: ['id_usuario',['usuario_nombre','contacto']],
-                    required:true
-                },
-                {
-                    model: Relacion,
-                    attributes: ['relacion'],
-                    required: true
-                }
+                {model: Usuarios, attributes: ['id_usuario',['usuario_nombre','contacto']], required:true},
+                {model: Relacion, attributes: ['relacion'], required: true}
             ],
             where: {id_usuario: `${idUsuario}`, id_relacion: `${idRelacion}`}
         });
