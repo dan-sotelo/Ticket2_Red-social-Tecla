@@ -56,7 +56,7 @@ Para poner a prueba los endpoints, así como sus diferentes métodos, se empleo 
 * 6. Dar click al botón **continue**
 
 Despues de seguir estos pasos, podrá visualizar la colección realizada en **Postman** con nombre **Ticket02-DanielSotelo**, que posee tres carpetas, la primera llamada Usuarios, que alberga las rutas relacionadas a los usuarios como registro, inicio de sesión, cambio de password, etc. La segunda caprpeta cuenta con las rutas asociadas a las empresas, que permiten realizar el registro de una nueva empresa, actualizar su información, etc. Y finalmente la carpeta administrador, donde se encuentran los endpoints que permiten realizar ciertas acciones exclusivas, como dar de alta una empresa, calificar a los usuarios, etc.
-**Para porner a prueba las rutas**
+**Para poner a prueba las rutas**
 * Para comenzar es necesario registrar un usuario con ayuda de la petición **POST Registro de usuarios** de la carpeta *Usuarios*, enviando en el body la información del usuario como un objeto JSON.
 * Una vez registrado un usuario, se debe realizar una petición de iniciar sesión con **POST Iniciar Sesión**, enviando de igual manera en el body un objeto JSON con el correo y la password del usuario registrado, esto nos brindará un token de autenticación que nos será de utilidad para realizar el resto de las peticiones.
 * La unica ruta que por el momento esta programada para que solo el administrador pueda acceder, es la petición **GET  Listar usuarios registrados**, ya que un usuario ordinario a pesar de ingresar un token de autenticación no podrá realizar la petición.
