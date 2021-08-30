@@ -40,5 +40,14 @@ let eliminarContacto = async(idUsuario, idConexion) =>{
     }
 }
 
+let buscarConexion = async(idUsuario, idContacto, idRelacion) =>{
+    try{
+        return amistad = await modeloContactos.buscarConexion(idUsuario, idContacto, idRelacion);
+    } catch(error) {
+        console.log(`Error en el controlador al eliminar buscar la conexion: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
 // Exportar los modulos
-module.exports = {enviarSolicitud, listarConexiones, aceptarSolicitud, eliminarContacto};
+module.exports = {enviarSolicitud, listarConexiones, aceptarSolicitud, eliminarContacto, buscarConexion};

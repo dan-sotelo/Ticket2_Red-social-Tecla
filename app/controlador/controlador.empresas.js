@@ -7,10 +7,10 @@ const jwt = require('jsonwebtoken');
 let registrarEmpresas = async(empresa,representante) =>{
     try{
         empresa.activa = false;
-        empresa.id_credencial = 2;
+        representante.activo = false;
+        empresa.id_credencial = 4;
         let encriptacion = await bcrypt.genSalt(10);
         empresa.password = await bcrypt.hash(empresa.password, encriptacion);
-        representante.activo = false;
         let nuevaEmpresa = await modeloEmpresas.registrarEmpresas(empresa,representante);
         return nuevaEmpresa;
     } catch(error) {
@@ -45,5 +45,46 @@ let generarToken = async(infoEmpresa) =>{
     }
 }
 
+let actualizarInformacion = async(idEmpresa, datos) =>{
+    try{
+        if (datos.pais != undefined){await modeloEmpresas.registrarPais(idEmpresa, datos.pais)};
+        if (datos.estado != undefined){await modeloEmpresas.registrarEstado(idEmpresa, datos.estado)};
+        if (datos.municipio != undefined){await modeloEmpresas.registrarMunicipio(idEmpresa, datos.municipio)};
+        if (datos.linkedin != undefined){await modeloEmpresas.registrarLinkedin(idEmpresa, datos.linkedin)};
+    } catch(error) {
+        console.log(`Error en el controlador al actualizar la información: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let consultarEmpresa = async(idEmpresa) =>{
+    try{
+        let empresa = await modeloEmpresas.consultarEmpresa(idEmpresa);
+        return empresa;
+    } catch(error) {
+        console.log(`Error en el controlador al listar la información de la empresa: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let registrarImagen = async(idEmpresa, imagen) =>{
+    try{
+        await modeloEmpresas.registrarImagen(idEmpresa, imagen)
+    } catch(error) {
+        console.log(`Error en el controlador al actualizar la imagen de usuario: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
+let listarEmpresas = async() =>{
+    try{
+        let empresas = await modeloEmpresas.listarEmpresas();
+        return empresas;
+    } catch(error) {
+        console.log(`Error en el controlador al listar las empresas: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
 // Exportar los modulos
-module.exports = {registrarEmpresas, buscarEmpresa, generarToken}
+module.exports = {registrarEmpresas, buscarEmpresa, generarToken, actualizarInformacion, consultarEmpresa, registrarImagen, listarEmpresas}

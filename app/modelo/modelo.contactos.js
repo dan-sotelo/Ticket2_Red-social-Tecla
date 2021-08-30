@@ -87,5 +87,19 @@ let eliminarContacto = async(idUsuario, idConexion) =>{
     }
 }
 
+let buscarConexion = async(idUsuario, idContacto, idRelacion) =>{
+    try{
+        let contacto = await Contactos.findOne({where: {id_usuario: `${idUsuario}`, id_contacto:`${idContacto}`, id_relacion: `${idRelacion}`}});
+        if(contacto!=null){
+            return true;
+        } else {
+            return false;
+        }
+    } catch(error) {
+        console.log(`Error en el modelo al eliminar el contacto: ${error}`);
+        throw new Error(error.message);
+    }
+}
+
 // Exportar los modulos
-module.exports = {enviarSolicitud, listarConexiones, aceptarSolicitud, eliminarContacto};
+module.exports = {enviarSolicitud, listarConexiones, aceptarSolicitud, eliminarContacto, buscarConexion};

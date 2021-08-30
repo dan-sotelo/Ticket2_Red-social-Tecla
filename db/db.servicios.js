@@ -73,7 +73,7 @@ let registrarDominioDeIdiomas = async() =>{
 
 let registrarConocimientos = async() =>{
     try{
-        let conocimientos = ['Base de Datos', 'APIS', 'Testing', 'Seguridad','Teoria de objetos'];
+        let conocimientos = ['DataBase', 'Apis', 'Testing', 'Seguridad','TeoriaObjetos'];
         for(let tipo = 0; tipo < conocimientos.length; tipo++){
             let conocimientoRegistrado = await Conocimientos.findOne({where: {conocimiento: `${conocimientos[tipo]}`}});
             if (conocimientoRegistrado == null){
@@ -103,7 +103,7 @@ let registrarTecnologias = async() =>{
 
 let registrarDesempeno = async() =>{
     try{
-        let conceptos = ['Calidad de código', 'Velocidad de entrega', 'Performance de código'];
+        let conceptos = ['CalidadCodigo', 'VelocidadEntrega', 'PerformanceCodigo'];
         for(let tipo = 0; tipo < conceptos.length; tipo++){
             let desempenoRegistrado = await Desempeno.findOne({where: {desempeno: `${conceptos[tipo]}`}});
             if (desempenoRegistrado == null){
@@ -118,7 +118,7 @@ let registrarDesempeno = async() =>{
 
 let registrarHabilidadesBlandas = async() =>{
     try{
-        let habilidades = ['Enfocado', 'Trabajo en equipo', 'Comprometido', 'Comunicación', 'Capacidad de aprendizaje', 'Resolución de problemas'];
+        let habilidades = ['Enfocado', 'TrabajoEquipo', 'Comprometido', 'Comunicacion', 'CapacidadAprendizaje', 'ResolucionProblemas'];
         for(let tipo = 0; tipo < habilidades.length; tipo++){
             let habilidadRegistrada = await Habilidades.findOne({where: {habilidad: `${habilidades[tipo]}`}});
             if (habilidadRegistrada == null){
@@ -133,7 +133,7 @@ let registrarHabilidadesBlandas = async() =>{
 
 let registrarEntornosProfesionales = async() =>{
     try{
-        let entornos = ['Versionado - GitHub', 'Trello - Jira', 'Slack', 'Métodologias ágiles'];
+        let entornos = ['GitHub', 'Trello', 'Slack', 'MetodologiasAgiles'];
         for(let tipo = 0; tipo < entornos.length; tipo++){
             let entornoRegistrado = await Entornos.findOne({where: {entorno: `${entornos[tipo]}`}});
             if (entornoRegistrado == null){

@@ -23,5 +23,20 @@ let datosRegistroRepresentantes = async(req, res, next) =>{
     }
 }
 
+// Middleware para validar credenciales
+let validarCredenciales = async(req, res, next) =>{
+    let infoEmpresa = req.params.empresa;
+    try{
+        if(infoEmpresa.credencial == 3){
+            return next();
+        } else {
+            throw new Error ('Usuario invalido');
+        }
+    } catch(error) {
+        console.log(error.message);
+        res.status(400).json({message: `Acceso denegado: ${error.message}`});
+    }
+}
+
 // Exportar los modulos
-module.exports = {datosRegistroEmpresas, datosRegistroRepresentantes}
+module.exports = {datosRegistroEmpresas, datosRegistroRepresentantes, validarCredenciales}
